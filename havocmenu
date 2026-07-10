@@ -1,0 +1,1561 @@
+--[[
+ .____                  ________ ___.    _____                           __                
+ |    |    __ _______   \_____  \\_ |___/ ____\_ __  ______ ____ _____ _/  |_  ___________ 
+ |    |   |  |  \__  \   /   |   \| __ \   __\  |  \/  ___// ___\\__  \\   __\/  _ \_  __ \
+ |    |___|  |  // __ \_/    |    \ \_\ \  | |  |  /\___ \\  \___ / __ \|  | (  <_> )  | \/
+ |_______ \____/(____  /\_______  /___  /__| |____//____  >\___  >____  /__|  \____/|__|   
+         \/          \/         \/    \/                \/     \/     \/                   
+          \_Welcome to LuaObfuscator.com   (Alpha 0.10.9) ~  Much Love, Ferib 
+
+]]--
+
+local Lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/neaxusxgod-png/INS-ui/main/uilib.min.lua"))() or INSui;
+local win = Lib:CreateWindow({title="Seim Havoc V2",subtitle="v2.0",size=Vector2.new(580, 460)});
+win:AddSettingsTab("cog");
+local Lighting = game:GetService("Lighting");
+local HttpService = game:GetService("HttpService");
+local RunService = game:GetService("RunService");
+local Players = game:GetService("Players");
+local Camera = workspace.CurrentCamera;
+local LocalPlayer = Players.LocalPlayer;
+_G.ESP = {SelectedItems={},SelectedCrates={},MaxDistance=500,Enabled=true};
+_G.WEAPON_ESP = {Enabled=false,SelectedWeapons={},MaxDistance=500};
+local ITEM_TIER = {[".338 Lapua Magnum"]="mythic",[".408 Cheyenne Tactical"]="mythic",[".45 ACP"]="uncommon",[".50 Action Express"]="uncommon",["0.2 BTC"]="rare",["12 Gauge Buckshot"]="uncommon",["23x75mm Shrapnel-10"]="mythic",["23x75mm Zvezda flashbang round"]="mythic",["4.6x30mm"]="uncommon",["40x46mm M406 grenade"]="mythic",["5.11 Hexgrid Plate Carrier"]="mythic",["5.45x39mm"]="uncommon",["5.56x45 Beta C-Mag 100-round drum magazine"]="uncommon",["5.56x45 Colt AR-15 STANAG 20-round magazine"]="uncommon",["5.56x45 Colt AR-15 STANAG 30-round magazine"]="uncommon",["5.56x45 Colt AR-15 STANAG 60-round magazine"]="uncommon",["5.56x45 PMAG 60-round magazine"]="uncommon",["5.56x45 TV 100-round magazine"]="uncommon",["5.56x45mm NATO"]="uncommon",["5.7x28mm"]="uncommon",["5.8x42mm"]="uncommon",["7.62x39mm"]="uncommon",["7.62x51mm NATO"]="uncommon",["7.62x54mmR"]="uncommon",["9x18mm"]="uncommon",["9x19mm"]="uncommon",["9x39 20-round magazine"]="uncommon",["9x39 30-round magazine"]="uncommon",["9x39mm"]="uncommon",["A7 Delta Riot Helmet"]="gear_common",["AA Battery"]="common",["ACOG TA11D 3.5x35 riflescope"]="uncommon",["AI-2"]="usable_item",Airstrike="mythic",["AK 7.62x39 40-round magazine"]="uncommon",["AK 7.62x39 Magpul PMAG 30 GEN M3 30-round magazine"]="uncommon",["AK-74 5.45x39 6L20 30-round magazine"]="uncommon",["AK-74 5.45x39 Magpul PMAG 30 GEN M3 30-round magazine"]="uncommon",["Altyn bulletproof Helmet"]="mythic",["Altyn helmet face shield"]="gear_rare",["Aluminium Nails"]="common",["Ammunition case"]="usable_item",["AN/PEQ-15 tactical device"]="uncommon",["Angled foregrip"]="uncommon",["Antique teapot"]="rare",["AS VAL"]="mythic",AWP="mythic",["AWP .338 Lapua Magnum 5-round magazine"]="uncommon",Awl="common",Bandage="usable_item",["Barbed Wire Bat"]="uncommon",["Bimetallic Thermometer"]="rare",["Box of Sugar"]="common_households",["Bramit 7.62x54R sound suppressor"]="uncommon",Brassknuckles="uncommon",Cables="common",["Can of Beef"]="rare",["Can of Mackerel"]="common_households",["Can of Salt"]="common_households",["Can of Tuna"]="common_households",Capacitors="common",["Car Battery"]="common",Cash="cash",["Chemical Solution"]="common",["CMMG Mk47 Mutant"]="mythic",["CMT ZCOMP linear compensator"]="mythic",["Colt 4x20 riflescope"]="uncommon",["Compact antenna"]="rare",["Conductor's Gold Pocket Watch"]="rare",["Construction Measuring Tape"]="common",["Corrugated Tube"]="rare",["Cottage Cache Key"]="keys",["Dawnscript Fragment"]="rare",["DC 800 High Cut Combat Helmet"]="gear_rare",Deodorant="common_households",["Diamond ring"]="mythic",Diary="rare",Dogtag="common",["Domino Crown"]="rare",["DP-27"]="mythic",["DP-27 7.62x54mmR 47-round pan magazine"]="uncommon",["Duct tape"]="common",["Electric Drill"]="common",["Empty dish"]="common_households",["EOTech 553 holographic sight"]="uncommon",["F-1"]="uncommon",["FAST MT Helmet"]="gear_rare",["FAST multi-hit ballistic face shield"]="gear_rare",["Field repair kit"]="usable_item",["Flash Drive"]="common",Flour="common_households",["FN P90 5.7x28 50-round magazine"]="uncommon",["FN SCAR-H 7.62x51 20-round magazine"]="uncommon",["FN SCAR-H 7.62x51 50-round drum magazine"]="uncommon",["Forest Green Ghillie Suit"]="mythic",["FORT-9 Heavy Assault Rig"]="gear_rare",["FORTIS Coastal Outpost Cache Key"]="keys",["FORTIS Level-0 keycard"]="keys",["FORTIS Level-1 keycard"]="keys",["FORTIS Level-2 keycard"]="keys",["FORTIS Level-3 keycard"]="keys",["FORTIS Level-4 keycard"]="keys",["FORTIS Level-5 keycard"]="keys",["FORTIS Level-6 keycard"]="keys",["FORTIS MK.II Gloves"]="mythic",Gears="common",["Gemtech SFN-57 5.7x28 sound suppressor"]="uncommon",Geolocator="common",Glue="common",["Gold bar"]="mythic",["Gold Trophy"]="rare",["Golden Cube"]="rare",["Golden Skull"]="rare",["Golden Smartphone"]="rare",["Golden Watch"]="rare",["Graphics card"]="rare",Gunpowder="rare",["Gzhel-K Body Armor"]="mythic",["Hand Wraps"]="gear_common",["Havocola Cherry Burn"]="common_households",["Havocola Classic"]="common_households",["HK MP5 9x19 30-round magazine"]="uncommon",["HK MP5 9x19 50-round drum magazine"]="uncommon",["HK MP7 4.6x30 40-round magazine"]="uncommon",["HK MP7 SD 2 4.6x30 sound suppressor"]="uncommon",["HK UMP .45 ACP 25-round magazine"]="uncommon",HK416="mythic",["HM6: Hemostatic Inhaler"]="usable_item_inhaler",["Homemade Soap"]="common_households",["HVC Gen4 Body Armor"]="mythic",["HVC Gen4 Body Armor (HMK)"]="mythic",["HVC Plate Carrier"]="gear_rare",["HVC-10T Night Vision Goggles"]="gear_rare",["Improvised plastic sound suppressor"]="uncommon",["Insecticide spray"]="common_households",["Insects Spray"]="common_households",["Insulin pump"]="common",["Integrated Tactical Plate Carrier"]="gear_rare",["Intelligence folder"]="rare",["Intervention M200"]="mythic",Karambit="uncommon",Katana="mythic",Ketchup="common_households",["Keycard holder case"]="usable_item",["Korund-VM Body Armor"]="gear_rare",["KS-23M"]="mythic",["Leupold Mark 8 8x24 riflescope"]="uncommon",Lockpick="uncommon",["Long Screwdriver"]="common",["LVPO 10x28 riflescope"]="uncommon",["M18 (White)"]="uncommon",["M200 .408 Cheyenne Tactical 5-round magazine"]="uncommon",M249="mythic",["M4 Benelli"]="mythic",["M40 Gas Mask Filter"]="gear_rare",["M40-1 Gas Mask"]="gear_common",["M40-2 Gas Mask"]="gear_common",M4A1="mythic",M67="uncommon",M79="mythic",M84="uncommon",["Magic Lamp"]="rare",Magnet="common",Mask="gear_common",["MBC Plate Carrier"]="gear_common",["Measuring tape"]="common",["Meat grinder"]="common_households",["Medical bloodset"]="common",["Medical Kit"]="usable_item",["Medical set"]="rare",["Metal Awl"]="common",["Metal Cutting Scissors"]="common",["Metal fuel tank"]="common_households",Microcircuits="common",["Military Backpack"]="mythic",["Military Helmet"]="gear_common",["Mk14 7.62x51 10-round magazine"]="common",["Mk14 EBR"]="mythic",Molotov="uncommon",["MOTR Concealable Reinforced Vest"]="gear_common",["Mounting Foam"]="common",["MP9 9x19 sound suppressor"]="uncommon",["MSA Paraclete Plate Carrier"]="gear_rare",Mug="common_households",Nails="common",["NCStar AQPTLMG Compact Green Laser"]="uncommon",["Nightforce ATACR 7-35x56"]="uncommon",["Nomad Route Notes"]="rare",["North Dolphin Hospital Safe Key"]="keys",["Northmont Sparkling Cider"]="rare",["NovaTec reflex sight"]="uncommon",["NovaTec RMR reflex sight"]="uncommon",["ODWave 556 5.56x45 sound suppressor"]="uncommon",["Oil Filter sound suppressor"]="uncommon",["OKP-7 reflex sight"]="uncommon",["Orange juice carton"]="common_households",["PA3: Relief Inhaler"]="usable_item_inhaler",["Pack of matches"]="common_households",["Palmolive handwash"]="common_households",["PBS-1 sound suppressor"]="uncommon",Perfume="common_households",["PG-7V HEAT grenade"]="mythic",Pickaxe="uncommon",["PICO-A1 Light Lower Body Armor"]="gear_common",["PICO-A2 Heavy Lower Body Armor"]="gear_rare",["Pile of meds"]="common",["Pipe wrench"]="rare",Pipecleaner="common",Porcelain="rare",["Power unit"]="common",Powerbank="common",["Precisive Grips"]="gear_rare",["Printer Paper"]="common",["PSO-1 4x24 scope"]="uncommon",["PU-1 3.5x riflescope"]="uncommon",["PureFire X300 Ultra"]="uncommon",["PX27 Headlamp"]="gear_rare",["QDSS-NT4 5.56x45 sound suppressor"]="uncommon",RAM="rare",["Rapid Emergency AED Compact Tool"]="mythic",["Rat Poison"]="rare",["RG-9: Regenerative Inhaler"]="usable_item_inhaler",RGO="mythic",["RK-1 tactical foregrip"]="uncommon",["ROVER Motorcycle Helmet"]="gear_common",["RPG-7"]="mythic",["RPK-16 5.45x39 95-round drum magazine"]="uncommon",["RV11: Emergency Resuscitator Inhaler"]="usable_item_inhaler",["S&M Backpack"]="usable_item",["S7: Stimulant Inhaler"]="usable_item_inhaler",["SA-58"]="mythic",["SA58/FAL 7.62x51 20-round magazine"]="uncommon",["SA58/FAL 7.62x51 50-round drum magazine"]="uncommon",["Saiga 12"]="mythic",["SAIPH signal pistol"]="usable_item",["SAS drive"]="rare",["SCAR-H"]="mythic",Scissors="common_households",["Scrap Metal"]="common",Screwdriver="common",["Scuba Gear"]="gear_common",["Sealed black file"]="rare",["Sealing Foam"]="common",["Sewing Kit"]="common",Shampoo="common_households",["Shards in the Code: Season One"]="common",["SHARK muzzle brake"]="mythic",["SilKo Osprey 9 9x19 sound suppressor"]="uncommon",["SilKo Salvo 12 12ga sound suppressor"]="uncommon",["Slick Plate Carrier"]="mythic",["Sling Bag"]="usable_item",Smartphone="common",["Sodium Bicarbonate"]="common",["Sodium Chloride"]="common",Splint="usable_item",Spoon="common_households",SR16="mythic",SSD="rare",["Sticky Tape"]="common",String="common",Superpunch="uncommon",["SureFire 3-prong flash hider"]="uncommon",["SureFire 4-prong flash hider"]="uncommon",["Surgical kit"]="rare",["SV-98 7.62x54R sound suppressor"]="uncommon",["T-7 Thermal Goggles"]="mythic",["T178 Raid Backpack"]="mythic",["Tactical Sword"]="uncommon",["Tank Battery"]="rare",["The 5th Annual Bloxy Award"]="rare",["The Crucible"]="contraband",["The Greatest Admin plushie"]="rare",["Titanium Alloy Plate"]="rare",["Toilet paper"]="common_households",Tomahawk="uncommon",Toothpaste="common_households",Tourniquet="usable_item",["Tube of cold welding"]="common",["Type 04-1 holographic sight"]="uncommon",["Type 95 5.8x42mm 30-round magazine"]="uncommon",["UH-1 holographic sight"]="uncommon",["ULACH IIIA Helmet"]="gear_rare",["USB extension cable"]="common",["Vanish 30 5.56x45 sound suppressor"]="mythic",["Vegetable oil"]="common_households",["Vertical foregrip"]="uncommon",["Vintage Gold Crown"]="rare",Vitamins="common",["VSS modern stock"]="mythic",["VSS Vintorez"]="mythic",Watch="common_households",["Weapon case"]="usable_item",["Weapon parts"]="rare",["White tube"]="common",Wrench="common",["XLaser pointer module"]="mythic",["Xtreme Motorcycle Helmet"]="gear_common",["YMA95-1 3.5x riflescope"]="uncommon"};
+local TIER_COLORS = {common=Color3.fromRGB(200, 200, 200),common_gun=Color3.fromRGB(180, 220, 180),common_households=Color3.fromRGB(210, 210, 210),uncommon=Color3.fromRGB(80, 200, 80),rare=Color3.fromRGB(180, 60, 255),mythic=Color3.fromRGB(255, 40, 40),keys=Color3.fromRGB(255, 230, 50),usable_item=Color3.fromRGB(60, 210, 210),usable_item_inhaler=Color3.fromRGB(60, 210, 210),gear_common=Color3.fromRGB(180, 130, 255),gear_rare=Color3.fromRGB(220, 80, 255),contraband=Color3.fromRGB(255, 30, 30),cash=Color3.fromRGB(100, 255, 100)};
+local function tierColor(name)
+	local tier = ITEM_TIER[name];
+	return (tier and TIER_COLORS[tier]) or Color3.fromRGB(255, 255, 255);
+end
+local itemColors = {};
+for name in pairs(ITEM_TIER) do
+	itemColors[name] = tierColor(name);
+end
+local function isAmmo(name)
+	local n = name:lower();
+	return n:find("x18mm") or n:find("x19mm") or n:find("x39mm") or n:find("x51mm") or n:find("x54mm") or n:find("x28mm") or n:find("x42mm") or n:find("x30mm") or n:find("x45") or n:find("x75mm") or n:find("gauge buckshot") or n:find("%.338") or n:find("%.408") or n:find("%.45 acp") or n:find("%.50 action") or n:find("4%.6x") or n:find("5%.45x") or n:find("5%.56x") or n:find("5%.7x") or n:find("5%.8x") or n:find("7%.62x") or n:find("9x39mm") or n:find("23x75mm") or n:find("40x46mm");
+end
+local function isAttachment(name)
+	local n = name:lower();
+	return n:find("magazine") or n:find("%-round ") or n:find("suppressor") or n:find("silencer") or n:find("foregrip") or n:find("grip") or n:find("riflescope") or n:find("scope") or n:find("holographic") or n:find("reflex sight") or n:find("flash hider") or n:find("muzzle brake") or n:find("compensator") or n:find("laser") or n:find("tactical device") or n:find("headlamp");
+end
+local tierLists = {mythic={},rare={},uncommon={},common={},keys={},usable={},household={},ammo={},attachments={}};
+for name, tier in pairs(ITEM_TIER) do
+	if isAmmo(name) then
+		tierLists.ammo[#tierLists.ammo + 1] = name;
+	elseif isAttachment(name) then
+		tierLists.attachments[#tierLists.attachments + 1] = name;
+	elseif (tier == "mythic") then
+		tierLists.mythic[#tierLists.mythic + 1] = name;
+	elseif (tier == "rare") then
+		tierLists.rare[#tierLists.rare + 1] = name;
+	elseif (tier == "uncommon") then
+		tierLists.uncommon[#tierLists.uncommon + 1] = name;
+	elseif (tier == "common") then
+		tierLists.common[#tierLists.common + 1] = name;
+	elseif (tier == "keys") then
+		tierLists.keys[#tierLists.keys + 1] = name;
+	elseif ((tier == "usable_item") or (tier == "usable_item_inhaler")) then
+		tierLists.usable[#tierLists.usable + 1] = name;
+	elseif (tier == "common_households") then
+		tierLists.household[#tierLists.household + 1] = name;
+	end
+end
+for _, list in pairs(tierLists) do
+	table.sort(list);
+end
+local _selectedByTier = {};
+local function rebuildSelected()
+	local out = {};
+	for _, bucket in pairs(_selectedByTier) do
+		for _, name in ipairs(bucket) do
+			out[#out + 1] = name;
+		end
+	end
+	_G.ESP.SelectedItems = out;
+end
+local crateNames = {"Ammunition Box","Cabinet","Cash Register","Closet","Complex Crate","Computer","Dishwasher","Double Washing Machine","Duffel Bag","Envelope","File Cabinet","Fridge","HospitalCabinet","HospitalCloset","HospitalTable","Locker","Medical Box","Medium Wooden Crate","Military Crate","Military File Cabinet","Military Radio","Miltary Server Unit","Pistol Case","Raider Cache","Rifle Case","Ruined Locker","Ruined Small Case","Safe","Server Unit","Small Case","StandingATM","Stove","Surgeon's Tool Shelf","TallFridge","Technical Shelf","Tool Shelf","Toolbox","WallATM","Washing Machine","Weapon Box","Weapon Locker","Wooden Crate"};
+local crateColors = {["Ammunition Box"]=Color3.fromRGB(255, 80, 40),Cabinet=Color3.fromRGB(160, 120, 80),["Cash Register"]=Color3.fromRGB(80, 200, 80),Closet=Color3.fromRGB(200, 160, 255),["Complex Crate"]=Color3.fromRGB(255, 160, 40),Computer=Color3.fromRGB(60, 180, 255),Dishwasher=Color3.fromRGB(120, 220, 240),["Double Washing Machine"]=Color3.fromRGB(100, 200, 255),["Duffel Bag"]=Color3.fromRGB(180, 140, 80),Envelope=Color3.fromRGB(255, 240, 140),["File Cabinet"]=Color3.fromRGB(160, 160, 160),Fridge=Color3.fromRGB(180, 240, 255),HospitalCabinet=Color3.fromRGB(200, 255, 220),HospitalCloset=Color3.fromRGB(160, 240, 200),HospitalTable=Color3.fromRGB(120, 220, 180),Locker=Color3.fromRGB(100, 140, 200),["Medical Box"]=Color3.fromRGB(255, 60, 100),["Medium Wooden Crate"]=Color3.fromRGB(200, 140, 60),["Military Crate"]=Color3.fromRGB(100, 160, 60),["Military File Cabinet"]=Color3.fromRGB(80, 140, 80),["Military Radio"]=Color3.fromRGB(60, 200, 120),["Miltary Server Unit"]=Color3.fromRGB(40, 180, 100),["Pistol Case"]=Color3.fromRGB(255, 100, 60),["Raider Cache"]=Color3.fromRGB(200, 60, 60),["Rifle Case"]=Color3.fromRGB(220, 80, 40),["Ruined Locker"]=Color3.fromRGB(140, 100, 80),["Ruined Small Case"]=Color3.fromRGB(160, 110, 90),Safe=Color3.fromRGB(80, 80, 200),["Server Unit"]=Color3.fromRGB(60, 140, 255),["Small Case"]=Color3.fromRGB(255, 180, 80),StandingATM=Color3.fromRGB(40, 200, 200),Stove=Color3.fromRGB(220, 120, 60),["Surgeon's Tool Shelf"]=Color3.fromRGB(100, 255, 200),TallFridge=Color3.fromRGB(160, 220, 255),["Technical Shelf"]=Color3.fromRGB(120, 160, 220),["Tool Shelf"]=Color3.fromRGB(200, 160, 80),Toolbox=Color3.fromRGB(255, 140, 20),WallATM=Color3.fromRGB(20, 180, 180),["Washing Machine"]=Color3.fromRGB(140, 200, 255),["Weapon Box"]=Color3.fromRGB(255, 60, 60),["Weapon Locker"]=Color3.fromRGB(220, 40, 40),["Wooden Crate"]=Color3.fromRGB(180, 120, 40)};
+local weaponTiers = {["311 Double Barrel"]="common_gun",["870 MCS"]="common_gun",["AK-74M"]="common_gun",["AKS-74U"]="common_gun",["AS VAL"]="mythic",AWP="mythic",["Beretta 92X"]="common_gun",["Citori 725"]="common_gun",["CMMG Mk47 Mutant"]="mythic",["Colt Python"]="common_gun",Deagle="common_gun",["DIY Flamethrower"]="common_gun",["DP-27"]="mythic",["GL 19 Gen4"]="common_gun",HK416="mythic",["Intervention M200"]="mythic",["KS-23M"]="mythic",["KRISS Vector"]="common_gun",M16A1="common_gun",M1911="common_gun",M249="mythic",["M4 Benelli"]="mythic",M4A1="mythic",M79="mythic",["MAC-10"]="common_gun",Makarov="common_gun",["Mk14 EBR"]="mythic",MP34="common_gun",MP5A5="common_gun",MP7="common_gun",MP9="common_gun",P90="common_gun",["QBZ-95"]="common_gun",["RPG-7"]="mythic",RPK="common_gun",["SA-58"]="mythic",["Saiga 12"]="mythic",["SCAR-H"]="mythic",SKS="common_gun",SR16="mythic",["SV-98"]="common_gun",SVD="common_gun",UMP45="common_gun",["VSS Vintorez"]="mythic"};
+local weaponNames = {};
+for k in pairs(weaponTiers) do
+	weaponNames[#weaponNames + 1] = k;
+end
+table.sort(weaponNames);
+local _off = {};
+pcall(function()
+	local res = game:HttpGet("https://offsets.imtheo.lol/Offsets.json");
+	local decoded = HttpService:JSONDecode(res);
+	_off = (decoded and decoded.Offsets) or {};
+end);
+local function off(section, key, fallback)
+	local s = _off[section];
+	return (s and s[key]) or fallback;
+end
+local OFF_FOG_END = off("Lighting", "FogEnd", 316);
+local OFF_FOG_START = off("Lighting", "FogStart", 320);
+local OFF_ATMO_DENSITY = off("Atmosphere", "Density", 232);
+local OFF_ATMO_GLARE = off("Atmosphere", "Glare", 236);
+local OFF_ATMO_HAZE = off("Atmosphere", "Haze", 240);
+local OFF_ATMO_OFFSET = off("Atmosphere", "Offset", 244);
+local lightingAddr, atmoAddr = 0, 0;
+local origFogEnd, origFogStart = 100000, 0;
+local origDensity, origGlare, origHaze, origOffset = 0.3, 0, 0, 0.25;
+local fogCaptured = false;
+local noFogEnabled = false;
+local lastNoFog = false;
+local function captureFog()
+	fogCaptured = true;
+	pcall(function()
+		lightingAddr = Lighting.Address or 0;
+	end);
+	pcall(function()
+		origFogEnd = Lighting.FogEnd;
+		origFogStart = Lighting.FogStart;
+	end);
+	local atmo = Lighting:FindFirstChildOfClass("Atmosphere");
+	if atmo then
+		pcall(function()
+			atmoAddr = atmo.Address or 0;
+		end);
+		pcall(function()
+			origDensity = atmo.Density;
+			origGlare = atmo.Glare;
+			origHaze = atmo.Haze;
+			origOffset = atmo.Offset;
+		end);
+	end
+end
+local function applyNoFog()
+	if not fogCaptured then
+		captureFog();
+	end
+	if not memory_write then
+		return;
+	end
+	if (lightingAddr ~= 0) then
+		memory_write("float", lightingAddr + OFF_FOG_END, 900000000);
+		memory_write("float", lightingAddr + OFF_FOG_START, 900000000);
+	end
+	if (atmoAddr ~= 0) then
+		memory_write("float", atmoAddr + OFF_ATMO_DENSITY, 0);
+		memory_write("float", atmoAddr + OFF_ATMO_GLARE, 0);
+		memory_write("float", atmoAddr + OFF_ATMO_HAZE, 0);
+		memory_write("float", atmoAddr + OFF_ATMO_OFFSET, 0);
+	end
+end
+local function restoreFog()
+	if (not fogCaptured or not memory_write) then
+		return;
+	end
+	if (lightingAddr ~= 0) then
+		memory_write("float", lightingAddr + OFF_FOG_END, origFogEnd);
+		memory_write("float", lightingAddr + OFF_FOG_START, origFogStart);
+	end
+	if (atmoAddr ~= 0) then
+		memory_write("float", atmoAddr + OFF_ATMO_DENSITY, origDensity);
+		memory_write("float", atmoAddr + OFF_ATMO_GLARE, origGlare);
+		memory_write("float", atmoAddr + OFF_ATMO_HAZE, origHaze);
+		memory_write("float", atmoAddr + OFF_ATMO_OFFSET, origOffset);
+	end
+end
+local Spread = {y={[1]=0,[2]=0,[3]=0},x={[1]=0,[2]=0,[3]=0},z={[1]=0,[2]=0,[3]=0}};
+local RecoilKeys = {"vPunchBase","hPunchBase","vel","spreadReduce","spread","weight","unAimWeight","aimWeight"};
+local noRecoilEnabled = false;
+local recoilCache = nil;
+local recoilPayload = {vPunchBase=0,hPunchBase=0,spreadReduce=100,spread=Spread,vel=100000,weight=0,aimWeight=0,unAimWeight=0};
+local TEXT_SIZE = 13;
+local CHARW = 7;
+local GAP = 6;
+local FONT = Drawing.Fonts.Monospace;
+local function poolVis(w, v)
+	if (w.vis ~= v) then
+		w.o.Visible = v;
+		w.vis = v;
+	end
+end
+local function poolPos(w, x, y)
+	if ((w.px ~= x) or (w.py ~= y)) then
+		w.o.Position = Vector2.new(x, y);
+		w.px = x;
+		w.py = y;
+	end
+end
+local function poolTxt(w, s)
+	if (w.txt ~= s) then
+		w.o.Text = s;
+		w.txt = s;
+	end
+end
+local function poolCol(w, c)
+	if (w.col ~= c) then
+		w.o.Color = c;
+		w.col = c;
+	end
+end
+local function wVis(w, v)
+	if (w.vis ~= v) then
+		w.o.Visible = v;
+		w.vis = v;
+	end
+end
+local function wCol(w, v)
+	if (w.col ~= v) then
+		w.o.Color = v;
+		w.col = v;
+	end
+end
+local function wPos(w, x, y)
+	if ((w.px ~= x) or (w.py ~= y)) then
+		w.o.Position = Vector2.new(x, y);
+		w.px = x;
+		w.py = y;
+	end
+end
+local function wText(w, s)
+	if (w.txt ~= s) then
+		w.o.Text = s;
+		w.txt = s;
+	end
+end
+local function wSeg(w, fx, fy, tx, ty)
+	if ((w.fx ~= fx) or (w.fy ~= fy)) then
+		w.o.From = Vector2.new(fx, fy);
+		w.fx = fx;
+		w.fy = fy;
+	end
+	if ((w.gx ~= tx) or (w.gy ~= ty)) then
+		w.o.To = Vector2.new(tx, ty);
+		w.gx = tx;
+		w.gy = ty;
+	end
+end
+if _G.HAVOC_ESP_CLEANUP then
+	pcall(_G.HAVOC_ESP_CLEANUP);
+end
+local running = true;
+local drawings = {};
+local renderConn = nil;
+local function track(obj)
+	drawings[obj] = true;
+	return obj;
+end
+_G.HAVOC_ESP_CLEANUP = function()
+	running = false;
+	if renderConn then
+		pcall(function()
+			renderConn:Disconnect();
+		end);
+		renderConn = nil;
+	end
+	for obj in pairs(drawings) do
+		pcall(function()
+			obj:Remove();
+		end);
+	end
+	drawings = {};
+	pcall(restoreFog);
+end;
+local NAME_COL = Color3.fromRGB(238, 238, 238);
+local DIST_COL = Color3.fromRGB(205, 205, 205);
+local WPN_COL = Color3.fromRGB(205, 205, 205);
+local HP_COL = Color3.fromRGB(120, 235, 120);
+local HP_BG_COL = Color3.fromRGB(40, 40, 40);
+local BOX_COL_DEF = Color3.fromRGB(255, 80, 80);
+local TRACER_COL = Color3.fromRGB(255, 80, 80);
+local CORPSE_COL = Color3.fromRGB(180, 180, 180);
+local MAX_SLOTS = 128;
+local HEAD_OFF = Vector3.new(0, 2.8, 0);
+local FOOT_OFF = Vector3.new(0, 3.2, 0);
+local function newLine(color)
+	local l = track(Drawing.new("Line"));
+	l.Thickness = 1;
+	l.Color = color or Color3.new(1, 1, 1);
+	l.Visible = false;
+	return l;
+end
+local function newText(color)
+	local t = track(Drawing.new("Text"));
+	t.Size = TEXT_SIZE;
+	t.Center = true;
+	t.Outline = true;
+	t.Font = FONT;
+	t.Color = color or NAME_COL;
+	t.Visible = false;
+	return t;
+end
+local function newDot(color)
+	local d = track(Drawing.new("Circle"));
+	d.Radius = 4;
+	d.Filled = true;
+	d.Thickness = 1;
+	d.Color = color or Color3.new(1, 1, 1);
+	d.Visible = false;
+	return d;
+end
+local function wrap(o)
+	return {o=o};
+end
+local function hpColor(ratio)
+	ratio = math.clamp(ratio, 0, 1);
+	return Color3.fromRGB(math.floor(255 * (1 - ratio)), math.floor(235 * ratio), 60);
+end
+local function newSlot()
+	local hpBg = track(Drawing.new("Line"));
+	hpBg.Thickness = 3;
+	hpBg.Color = HP_BG_COL;
+	hpBg.Visible = false;
+	local hpFg = track(Drawing.new("Line"));
+	hpFg.Thickness = 3;
+	hpFg.Color = HP_COL;
+	hpFg.Visible = false;
+	return {box={wrap(newLine(BOX_COL_DEF)),wrap(newLine(BOX_COL_DEF)),wrap(newLine(BOX_COL_DEF)),wrap(newLine(BOX_COL_DEF))},hpBg=wrap(hpBg),hpFg=wrap(hpFg),name=wrap(newText(NAME_COL)),dist=wrap(newText(DIST_COL)),wpn=wrap(newText(WPN_COL)),tracer=wrap(newLine(TRACER_COL)),dot=wrap(newDot(CORPSE_COL))};
+end
+local slots = {};
+for i = 1, MAX_SLOTS do
+	slots[i] = newSlot();
+end
+local function hideSlot(s)
+	for i = 1, 4 do
+		wVis(s.box[i], false);
+	end
+	wVis(s.hpBg, false);
+	wVis(s.hpFg, false);
+	wVis(s.name, false);
+	wVis(s.dist, false);
+	wVis(s.wpn, false);
+	wVis(s.tracer, false);
+	wVis(s.dot, false);
+end
+local function textW(t)
+	return #t * CHARW;
+end
+local function drawText(w, cx, y, text, color)
+	wText(w, text);
+	wPos(w, cx, y);
+	wCol(w, color);
+	wVis(w, true);
+end
+local function drawBox(s, x, y, w, h, col)
+	wSeg(s.box[1], x, y, x + w, y);
+	wSeg(s.box[2], x, y + h, x + w, y + h);
+	wSeg(s.box[3], x, y, x, y + h);
+	wSeg(s.box[4], x + w, y, x + w, y + h);
+	for i = 1, 4 do
+		wCol(s.box[i], col);
+		wVis(s.box[i], true);
+	end
+end
+local function readWeapon(model)
+	local tool = model:FindFirstChildOfClass("Tool");
+	if tool then
+		return tool.Name;
+	end
+end
+local function collectFrom(inst, myChar, out, depth)
+	if (depth > 8) then
+		return;
+	end
+	local ok, kids = pcall(function()
+		return inst:GetChildren();
+	end);
+	if (not ok or not kids) then
+		return;
+	end
+	for _, child in ipairs(kids) do
+		if (child ~= myChar) then
+			local hum;
+			pcall(function()
+				hum = child:FindFirstChildOfClass("Humanoid");
+			end);
+			if hum then
+				local hrp = child:FindFirstChild("HumanoidRootPart") or child:FindFirstChild("Torso") or child:FindFirstChild("Head");
+				if not hrp then
+					pcall(function()
+						hrp = child:FindFirstChildWhichIsA("BasePart");
+					end);
+				end
+				if hrp then
+					local hp, maxhp;
+					pcall(function()
+						hp = hum.Health;
+						maxhp = hum.MaxHealth;
+					end);
+					out[#out + 1] = {model=child,hrp=hrp,hp=hp,maxhp=maxhp,weapon=readWeapon(child)};
+				end
+			else
+				local cn = child.ClassName;
+				if ((cn == "Model") or (cn == "Folder")) then
+					collectFrom(child, myChar, out, depth + 1);
+				end
+			end
+		end
+	end
+end
+local charFolder = nil;
+local function countRigs(container)
+	local ok, kids = pcall(function()
+		return container:GetChildren();
+	end);
+	if (not ok or not kids) then
+		return 0;
+	end
+	local n = 0;
+	for _, c in ipairs(kids) do
+		if (c.ClassName == "Model") then
+			local ok2, hum = pcall(function()
+				return c:FindFirstChildOfClass("Humanoid");
+			end);
+			if (ok2 and hum) then
+				n = n + 1;
+			end
+		end
+	end
+	return n;
+end
+local function resolveCharFolder()
+	local ch = LocalPlayer and LocalPlayer.Character;
+	if ch then
+		local ok, par = pcall(function()
+			return ch.Parent;
+		end);
+		if (ok and par and (par ~= workspace) and (countRigs(par) >= 1)) then
+			return par;
+		end
+	end
+	local best, bestN = nil, 0;
+	local ok, kids = pcall(function()
+		return workspace:GetChildren();
+	end);
+	if (ok and kids) then
+		for _, c in ipairs(kids) do
+			local cn = c.ClassName;
+			if ((cn == "Model") or (cn == "Folder")) then
+				local n = countRigs(c);
+				if (n > bestN) then
+					bestN = n;
+					best = c;
+				end
+			end
+		end
+	end
+	if (bestN >= 1) then
+		return best;
+	end
+end
+local function getCharFolder()
+	if charFolder then
+		local ok, par = pcall(function()
+			return charFolder.Parent;
+		end);
+		if (ok and par) then
+			return charFolder;
+		end
+		charFolder = nil;
+	end
+	charFolder = resolveCharFolder();
+	return charFolder;
+end
+local charCache, charStamp = {}, 0;
+local function getCharacters()
+	local now = os.clock();
+	if ((now - charStamp) < 0.5) then
+		return charCache;
+	end
+	charStamp = now;
+	local out = {};
+	local folder = getCharFolder();
+	if folder then
+		pcall(collectFrom, folder, LocalPlayer and LocalPlayer.Character, out, 0);
+	end
+	charCache = out;
+	return out;
+end
+local itemFolderRef, crateFolderRef = nil, nil;
+local function getItemFolder()
+	if itemFolderRef then
+		local ok, par = pcall(function()
+			return itemFolderRef.Parent;
+		end);
+		if (ok and par) then
+			return itemFolderRef;
+		end
+		itemFolderRef = nil;
+	end
+	local ok, f = pcall(function()
+		return workspace.Buildings.Loots:FindFirstChild("Items");
+	end);
+	itemFolderRef = (ok and f) or nil;
+	return itemFolderRef;
+end
+local function getCrateFolder()
+	if crateFolderRef then
+		local ok, par = pcall(function()
+			return crateFolderRef.Parent;
+		end);
+		if (ok and par) then
+			return crateFolderRef;
+		end
+		crateFolderRef = nil;
+	end
+	local ok, f = pcall(function()
+		return workspace.Buildings.Loots.Loots:FindFirstChild("Crates");
+	end);
+	crateFolderRef = (ok and f) or nil;
+	return crateFolderRef;
+end
+local POOL_SIZE = 200;
+local labelPool = {};
+local dotPool = {};
+local lootLastDrawn = 0;
+local lootStamp = 0;
+local LOOT_TTL = 1;
+local cachedItems = {};
+for i = 1, POOL_SIZE do
+	local lbl = track(Drawing.new("Text"));
+	lbl.Center = true;
+	lbl.Outline = true;
+	lbl.Size = 13;
+	lbl.Font = FONT;
+	lbl.Visible = false;
+	labelPool[i] = {o=lbl,vis=false,px=0,py=0,txt="",col=Color3.new(1, 1, 1)};
+	local dot = track(Drawing.new("Circle"));
+	dot.Radius = 4;
+	dot.Filled = true;
+	dot.Thickness = 1;
+	dot.Visible = false;
+	dotPool[i] = {o=dot,vis=false,px=0,py=0,col=Color3.new(1, 1, 1)};
+end
+local function rebuildLootCache()
+	local char = LocalPlayer.Character;
+	local hrp = char and char:FindFirstChild("HumanoidRootPart");
+	if not hrp then
+		cachedItems = {};
+		return;
+	end
+	local myPos = hrp.Position;
+	local maxDistSq = _G.ESP.MaxDistance ^ 2;
+	local itemSet, crateSet = {}, {};
+	for _, v in ipairs(_G.ESP.SelectedItems) do
+		itemSet[v] = true;
+	end
+	for _, v in ipairs(_G.ESP.SelectedCrates) do
+		crateSet[v] = true;
+	end
+	local out = {};
+	local function collect(folder, colorTable, setTable)
+		if not folder then
+			return;
+		end
+		local ok, kids = pcall(function()
+			return folder:GetChildren();
+		end);
+		if (not ok or not kids) then
+			return;
+		end
+		for _, obj in ipairs(kids) do
+			if (#out >= POOL_SIZE) then
+				break;
+			end
+			if setTable[obj.Name] then
+				local root = obj:FindFirstChildWhichIsA("BasePart");
+				if (root and root.Parent) then
+					local rp = root.Position;
+					local dx, dy, dz = rp.X - myPos.X, rp.Y - myPos.Y, rp.Z - myPos.Z;
+					if (((dx * dx) + (dy * dy) + (dz * dz)) <= maxDistSq) then
+						out[#out + 1] = {root=root,name=obj.Name,color=(colorTable[obj.Name] or Color3.new(1, 1, 1))};
+					end
+				end
+			end
+		end
+	end
+	collect(getItemFolder(), itemColors, itemSet);
+	collect(getCrateFolder(), crateColors, crateSet);
+	cachedItems = out;
+end
+local WPNPOOL_SIZE = 100;
+local wpnLabelPool = {};
+local wpnDotPool = {};
+local wpnLastDrawn = 0;
+local wpnStamp = 0;
+local cachedWeapons = {};
+for i = 1, WPNPOOL_SIZE do
+	local lbl = track(Drawing.new("Text"));
+	lbl.Center = true;
+	lbl.Outline = true;
+	lbl.Size = 13;
+	lbl.Font = FONT;
+	lbl.Visible = false;
+	wpnLabelPool[i] = {o=lbl,vis=false,px=0,py=0,txt="",col=Color3.new(1, 1, 1)};
+	local dot = track(Drawing.new("Circle"));
+	dot.Radius = 4;
+	dot.Filled = true;
+	dot.Thickness = 1;
+	dot.Visible = false;
+	wpnDotPool[i] = {o=dot,vis=false,px=0,py=0,col=Color3.new(1, 1, 1)};
+end
+local function rebuildWeaponCache()
+	local char = LocalPlayer.Character;
+	local hrp = char and char:FindFirstChild("HumanoidRootPart");
+	if not hrp then
+		cachedWeapons = {};
+		return;
+	end
+	local myPos = hrp.Position;
+	local maxDistSq = _G.WEAPON_ESP.MaxDistance ^ 2;
+	local selSet = {};
+	for _, v in ipairs(_G.WEAPON_ESP.SelectedWeapons) do
+		selSet[v] = true;
+	end
+	local out = {};
+	local itemFolder = getItemFolder();
+	if itemFolder then
+		local ok, kids = pcall(function()
+			return itemFolder:GetChildren();
+		end);
+		if (ok and kids) then
+			for _, obj in ipairs(kids) do
+				if (#out >= WPNPOOL_SIZE) then
+					break;
+				end
+				if selSet[obj.Name] then
+					local root = obj:FindFirstChildWhichIsA("BasePart");
+					if (root and root.Parent) then
+						local rp = root.Position;
+						local dx, dy, dz = rp.X - myPos.X, rp.Y - myPos.Y, rp.Z - myPos.Z;
+						if (((dx * dx) + (dy * dy) + (dz * dz)) <= maxDistSq) then
+							local tier = weaponTiers[obj.Name] or "common_gun";
+							local color = TIER_COLORS[tier] or Color3.new(1, 1, 1);
+							out[#out + 1] = {root=root,name=obj.Name,color=color};
+						end
+					end
+				end
+			end
+		end
+	end
+	cachedWeapons = out;
+end
+local TURRET_COL = Color3.fromRGB(255, 60, 60);
+local TURRET_POOL_SIZE = 50;
+local turretLabelPool = {};
+local turretDotPool = {};
+local turretLastDrawn = 0;
+local turretStamp = 0;
+local TURRET_TTL = 2;
+local turretEnabled = false;
+local turretMaxDist = 1000;
+local cachedTurrets = {};
+local sentryFolderRef = nil;
+for i = 1, TURRET_POOL_SIZE do
+	local lbl = track(Drawing.new("Text"));
+	lbl.Center = true;
+	lbl.Outline = true;
+	lbl.Size = 13;
+	lbl.Font = FONT;
+	lbl.Color = TURRET_COL;
+	lbl.Visible = false;
+	turretLabelPool[i] = {o=lbl,vis=false,px=0,py=0,txt=""};
+	local dot = track(Drawing.new("Circle"));
+	dot.Radius = 5;
+	dot.Filled = true;
+	dot.Thickness = 1;
+	dot.Color = TURRET_COL;
+	dot.Visible = false;
+	turretDotPool[i] = {o=dot,vis=false,px=0,py=0};
+end
+local function getSentryFolder()
+	if sentryFolderRef then
+		local ok, par = pcall(function()
+			return sentryFolderRef.Parent;
+		end);
+		if (ok and par) then
+			return sentryFolderRef;
+		end
+		sentryFolderRef = nil;
+	end
+	local ok, f = pcall(function()
+		return workspace.Buildings.EventObjects.Sentries;
+	end);
+	sentryFolderRef = (ok and f) or nil;
+	return sentryFolderRef;
+end
+local function rebuildTurretCache()
+	local folder = getSentryFolder();
+	if not folder then
+		cachedTurrets = {};
+		return;
+	end
+	local char = LocalPlayer.Character;
+	local hrp = char and char:FindFirstChild("HumanoidRootPart");
+	if not hrp then
+		cachedTurrets = {};
+		return;
+	end
+	local myPos = hrp.Position;
+	local maxDistSq = turretMaxDist ^ 2;
+	local out = {};
+	local ok, kids = pcall(function()
+		return folder:GetChildren();
+	end);
+	if (not ok or not kids) then
+		cachedTurrets = {};
+		return;
+	end
+	for _, obj in ipairs(kids) do
+		if (#out >= TURRET_POOL_SIZE) then
+			break;
+		end
+		local anchor = obj:FindFirstChild("Base") or obj:FindFirstChild("Rotator") or obj:FindFirstChildWhichIsA("BasePart");
+		if anchor then
+			local pos = anchor.Position;
+			local dx, dy, dz = pos.X - myPos.X, pos.Y - myPos.Y, pos.Z - myPos.Z;
+			if (((dx * dx) + (dy * dy) + (dz * dz)) <= maxDistSq) then
+				out[#out + 1] = {anchor=anchor,name=obj.Name};
+			end
+		end
+	end
+	cachedTurrets = out;
+end
+local CORPSE_ESP_COL = Color3.fromRGB(255, 255, 255);
+local CORPSE_POOL_SIZE = 80;
+local corpseLabelPool = {};
+local corpseDotPool = {};
+local corpseLastDrawn = 0;
+local corpseStamp = 0;
+local CORPSE_TTL = 2;
+local corpseEnabled = false;
+local corpseMaxDist = 500;
+local cachedCorpses = {};
+local corpseFolderRef = nil;
+for i = 1, CORPSE_POOL_SIZE do
+	local lbl = track(Drawing.new("Text"));
+	lbl.Center = true;
+	lbl.Outline = true;
+	lbl.Size = 13;
+	lbl.Font = FONT;
+	lbl.Color = CORPSE_ESP_COL;
+	lbl.Visible = false;
+	corpseLabelPool[i] = {o=lbl,vis=false,px=0,py=0,txt=""};
+	local dot = track(Drawing.new("Circle"));
+	dot.Radius = 4;
+	dot.Filled = true;
+	dot.Thickness = 1;
+	dot.Color = CORPSE_ESP_COL;
+	dot.Visible = false;
+	corpseDotPool[i] = {o=dot,vis=false,px=0,py=0};
+end
+local function getCorpseFolder()
+	if corpseFolderRef then
+		local ok, par = pcall(function()
+			return corpseFolderRef.Parent;
+		end);
+		if (ok and par) then
+			return corpseFolderRef;
+		end
+		corpseFolderRef = nil;
+	end
+	local ok, f = pcall(function()
+		return workspace.Buildings.Loots.Loots:FindFirstChild("Characters");
+	end);
+	corpseFolderRef = (ok and f) or nil;
+	return corpseFolderRef;
+end
+local function rebuildCorpseCache()
+	local folder = getCorpseFolder();
+	if not folder then
+		cachedCorpses = {};
+		return;
+	end
+	local char = LocalPlayer.Character;
+	local hrp = char and char:FindFirstChild("HumanoidRootPart");
+	if not hrp then
+		cachedCorpses = {};
+		return;
+	end
+	local myPos = hrp.Position;
+	local maxDistSq = corpseMaxDist ^ 2;
+	local out = {};
+	local ok, kids = pcall(function()
+		return folder:GetChildren();
+	end);
+	if (not ok or not kids) then
+		cachedCorpses = {};
+		return;
+	end
+	for _, m in ipairs(kids) do
+		if (#out >= CORPSE_POOL_SIZE) then
+			break;
+		end
+		if (m.ClassName == "Model") then
+			local anchor = m:FindFirstChild("HumanoidRootPart") or m:FindFirstChild("Torso") or m:FindFirstChild("Head") or m:FindFirstChildWhichIsA("BasePart");
+			if anchor then
+				local ap = anchor.Position;
+				local dx, dy, dz = ap.X - myPos.X, ap.Y - myPos.Y, ap.Z - myPos.Z;
+				if (((dx * dx) + (dy * dy) + (dz * dz)) <= maxDistSq) then
+					out[#out + 1] = {anchor=anchor,name=m.Name};
+				end
+			end
+		end
+	end
+	cachedCorpses = out;
+end
+local KEYCARD_TIER_COLORS = {[0]=Color3.fromRGB(180, 180, 180),[1]=Color3.fromRGB(100, 220, 100),[2]=Color3.fromRGB(80, 160, 255),[3]=Color3.fromRGB(180, 100, 255),[4]=Color3.fromRGB(255, 180, 50),[5]=Color3.fromRGB(255, 60, 60),[6]=Color3.fromRGB(255, 215, 0)};
+local KEYCARD_FALLBACK = Color3.fromRGB(255, 215, 0);
+local SLIDER_POOL_SIZE = 60;
+local sliderLabelPool = {};
+local sliderDotPool = {};
+local sliderLastDrawn = 0;
+local sliderStamp = 0;
+local SLIDER_TTL = 2;
+local sliderEnabled = false;
+local sliderMaxDist = 1000;
+local cachedSliders = {};
+local sliderFolderRef = nil;
+for i = 1, SLIDER_POOL_SIZE do
+	local lbl = track(Drawing.new("Text"));
+	lbl.Center = true;
+	lbl.Outline = true;
+	lbl.Size = 13;
+	lbl.Font = FONT;
+	lbl.Color = KEYCARD_FALLBACK;
+	lbl.Visible = false;
+	sliderLabelPool[i] = {o=lbl,vis=false,px=0,py=0,txt="",col=KEYCARD_FALLBACK};
+	local dot = track(Drawing.new("Circle"));
+	dot.Radius = 5;
+	dot.Filled = true;
+	dot.Thickness = 1;
+	dot.Color = KEYCARD_FALLBACK;
+	dot.Visible = false;
+	sliderDotPool[i] = {o=dot,vis=false,px=0,py=0,col=KEYCARD_FALLBACK};
+end
+local function getSliderFolder()
+	if sliderFolderRef then
+		local ok, par = pcall(function()
+			return sliderFolderRef.Parent;
+		end);
+		if (ok and par) then
+			return sliderFolderRef;
+		end
+		sliderFolderRef = nil;
+	end
+	local ok, f = pcall(function()
+		return workspace.Buildings.Loots.Interactable:FindFirstChild("KeycardSliders");
+	end);
+	sliderFolderRef = (ok and f) or nil;
+	return sliderFolderRef;
+end
+local function getSliderTier(name)
+	local tier = name:match("[Ll]evel[-% ]?(%d)") or name:match("(%d)");
+	if tier then
+		local t = tonumber(tier);
+		if (t and (t >= 0) and (t <= 6)) then
+			return t;
+		end
+	end
+	return nil;
+end
+local function rebuildSliderCache()
+	local folder = getSliderFolder();
+	if not folder then
+		cachedSliders = {};
+		return;
+	end
+	local char = LocalPlayer.Character;
+	local hrp = char and char:FindFirstChild("HumanoidRootPart");
+	if not hrp then
+		cachedSliders = {};
+		return;
+	end
+	local myPos = hrp.Position;
+	local maxDistSq = sliderMaxDist ^ 2;
+	local out = {};
+	local ok, kids = pcall(function()
+		return folder:GetChildren();
+	end);
+	if (not ok or not kids) then
+		cachedSliders = {};
+		return;
+	end
+	for _, obj in ipairs(kids) do
+		if (#out >= SLIDER_POOL_SIZE) then
+			break;
+		end
+		if (obj.ClassName == "Model") then
+			local anchor = obj.PrimaryPart or obj:FindFirstChildWhichIsA("BasePart");
+			if anchor then
+				local pos = anchor.Position;
+				local dx, dy, dz = pos.X - myPos.X, pos.Y - myPos.Y, pos.Z - myPos.Z;
+				if (((dx * dx) + (dy * dy) + (dz * dz)) <= maxDistSq) then
+					local tier = getSliderTier(obj.Name);
+					local color = (tier and KEYCARD_TIER_COLORS[tier]) or KEYCARD_FALLBACK;
+					local label = (tier and ("Slider T" .. tier)) or "Keycard Slider";
+					out[#out + 1] = {anchor=anchor,name=label,color=color};
+				end
+			end
+		end
+	end
+	cachedSliders = out;
+end
+local aimbotEnabled = false;
+local aimbotFOV = 150;
+local aimbotSmooth = 0.2;
+local aimbotBone = "Head";
+local showFOV = false;
+local fovCircle = track(Drawing.new("Circle"));
+fovCircle.Radius = aimbotFOV;
+fovCircle.Filled = false;
+fovCircle.Thickness = 1;
+fovCircle.NumSides = 64;
+fovCircle.Color = Color3.fromRGB(255, 255, 255);
+fovCircle.Transparency = 0.5;
+fovCircle.Visible = false;
+local function getNearestNPC()
+	local char = LocalPlayer and LocalPlayer.Character;
+	local myHRP = char and char:FindFirstChild("HumanoidRootPart");
+	if not myHRP then
+		return nil;
+	end
+	local vp = Camera.ViewportSize;
+	local cx, cy = vp.X * 0.5, vp.Y * 0.5;
+	local fovSq = aimbotFOV * aimbotFOV;
+	local best, bestDistSq = nil, math.huge;
+	for _, e in ipairs(getCharacters()) do
+		if not (e.hp and (e.hp <= 0)) then
+			local bone = e.model:FindFirstChild(aimbotBone) or e.model:FindFirstChild("HumanoidRootPart") or e.hrp;
+			if bone then
+				local pos, onScreen = WorldToScreen(bone.Position);
+				if onScreen then
+					local dx = pos.X - cx;
+					local dy = pos.Y - cy;
+					local dSq = (dx * dx) + (dy * dy);
+					if ((dSq < fovSq) and (dSq < bestDistSq)) then
+						bestDistSq = dSq;
+						best = bone;
+					end
+				end
+			end
+		end
+	end
+	return best;
+end
+local function doAimbot()
+	if not aimbotEnabled then
+		return;
+	end
+	if not ismouse2pressed() then
+		return;
+	end
+	local target = getNearestNPC();
+	if not target then
+		return;
+	end
+	local pos, onScreen = WorldToScreen(target.Position);
+	if not onScreen then
+		return;
+	end
+	local vp = Camera.ViewportSize;
+	local cx = vp.X * 0.5;
+	local cy = vp.Y * 0.5;
+	local moveX = math.floor((pos.X - cx) * aimbotSmooth);
+	local moveY = math.floor((pos.Y - cy) * aimbotSmooth);
+	if ((math.abs(moveX) > 0) or (math.abs(moveY) > 0)) then
+		mousemoverel(moveX, moveY);
+	end
+end
+local function updateFOVCircle()
+	if (showFOV and aimbotEnabled) then
+		local vp = Camera.ViewportSize;
+		fovCircle.Position = Vector2.new(vp.X * 0.5, vp.Y * 0.5);
+		fovCircle.Radius = aimbotFOV;
+		fovCircle.Visible = true;
+	else
+		fovCircle.Visible = false;
+	end
+end
+local espTab = win:Tab("ESP", "eye");
+local secLeft = espTab:Section("Loot Selection", "Left");
+local secRight = espTab:Section("Settings", "Right");
+local visualsTab = win:Tab("Visuals", "sun");
+local visLeft = visualsTab:Section("Environment", "Left");
+local combatTab = win:Tab("Combat", "crosshair");
+local combatLeft = combatTab:Section("Weapon", "Left");
+local aiTab = win:Tab("AI ESP", "users");
+local aiLeft = aiTab:Section("AI ESP", "Left");
+local aiRight = aiTab:Section("Aimbot", "Right");
+local dangerTab = win:Tab("Danger", "shield");
+local dangerLeft = dangerTab:Section("Turrets", "Left");
+secLeft:Toggle("Enable ESP", true, function(v)
+	_G.ESP.Enabled = v;
+end);
+secLeft:Divider("Mythic");
+secLeft:Dropdown("Mythic Items", {}, tierLists.mythic, true, function(selected)
+	_selectedByTier['mythic'] = selected;
+	rebuildSelected();
+end, nil, true);
+secLeft:Divider("Rare");
+secLeft:Dropdown("Rare Items", {}, tierLists.rare, true, function(selected)
+	_selectedByTier['rare'] = selected;
+	rebuildSelected();
+end, nil, true);
+secLeft:Divider("Uncommon");
+secLeft:Dropdown("Uncommon Items", {}, tierLists.uncommon, true, function(selected)
+	_selectedByTier['uncommon'] = selected;
+	rebuildSelected();
+end, nil, true);
+secLeft:Divider("Common");
+secLeft:Dropdown("Common Items", {}, tierLists.common, true, function(selected)
+	_selectedByTier['common'] = selected;
+	rebuildSelected();
+end, nil, true);
+secLeft:Divider("Keys");
+secLeft:Dropdown("Keys", {}, tierLists.keys, true, function(selected)
+	_selectedByTier['keys'] = selected;
+	rebuildSelected();
+end, nil, true);
+secLeft:Divider("Keycard Sliders");
+secLeft:Toggle("Keycard Slider ESP", false, function(v)
+	sliderEnabled = v;
+	if not v then
+		for i = 1, sliderLastDrawn do
+			poolVis(sliderLabelPool[i], false);
+			poolVis(sliderDotPool[i], false);
+		end
+		sliderLastDrawn = 0;
+		cachedSliders = {};
+	end
+end);
+secLeft:Slider("Slider Max Distance", 1000, 50, 50, 3000, "m", function(v)
+	sliderMaxDist = v;
+end);
+secLeft:Divider("Usable");
+secLeft:Dropdown("Usable / Inhalers", {}, tierLists.usable, true, function(selected)
+	_selectedByTier['usable'] = selected;
+	rebuildSelected();
+end, nil, true);
+secLeft:Divider("Household");
+secLeft:Dropdown("Household Items", {}, tierLists.household, true, function(selected)
+	_selectedByTier['household'] = selected;
+	rebuildSelected();
+end, nil, true);
+secLeft:Divider("Ammo");
+secLeft:Dropdown("Ammo", {}, tierLists.ammo, true, function(selected)
+	_selectedByTier['ammo'] = selected;
+	rebuildSelected();
+end, nil, true);
+secLeft:Divider("Attachments");
+secLeft:Dropdown("Attachments", {}, tierLists.attachments, true, function(selected)
+	_selectedByTier['attachments'] = selected;
+	rebuildSelected();
+end, nil, true);
+secLeft:Divider("Crates");
+secLeft:Dropdown("Select Crates", {}, crateNames, true, function(selected)
+	_G.ESP.SelectedCrates = selected;
+end, nil, true);
+secLeft:Divider("Weapons");
+secLeft:Toggle("Enable Weapon ESP", false, function(v)
+	_G.WEAPON_ESP.Enabled = v;
+end);
+secLeft:Dropdown("Select Weapons", {}, weaponNames, true, function(selected)
+	_G.WEAPON_ESP.SelectedWeapons = selected;
+end, nil, true);
+secRight:Slider("Max Distance", 500, 10, 10, 2000, "m", function(v)
+	_G.ESP.MaxDistance = v;
+	_G.WEAPON_ESP.MaxDistance = v;
+end);
+visLeft:Toggle("No Fog", false, function(v)
+	noFogEnabled = v;
+end);
+combatLeft:Toggle("No Recoil", false, function(v)
+	noRecoilEnabled = v;
+	recoilCache = (v and getgc(RecoilKeys)) or nil;
+end);
+local snap = {box=false,name=true,dist=true,health=true,weapon=true,tracer=false};
+local aiEnabled = true;
+local aiDistMax = 1500;
+local aiUpdateRate = 15;
+aiLeft:Toggle("Enabled", true, function(v)
+	aiEnabled = v;
+end);
+aiLeft:Toggle("Name", true, function(v)
+	snap.name = v;
+end);
+aiLeft:Toggle("Distance", true, function(v)
+	snap.dist = v;
+end);
+aiLeft:Toggle("Health", true, function(v)
+	snap.health = v;
+end);
+aiLeft:Toggle("Weapon", true, function(v)
+	snap.weapon = v;
+end);
+aiLeft:Toggle("Box", false, function(v)
+	snap.box = v;
+end);
+aiLeft:Toggle("Tracers", false, function(v)
+	snap.tracer = v;
+end);
+aiLeft:Slider("Max Distance", 1500, 50, 50, 3000, "m", function(v)
+	aiDistMax = v;
+end);
+aiLeft:Slider("Update Rate (fps)", 15, 5, 5, 60, "fps", function(v)
+	aiUpdateRate = v;
+end);
+aiRight:Toggle("Enable Aimbot", false, function(v)
+	aimbotEnabled = v;
+	if not v then
+		fovCircle.Visible = false;
+	end
+end);
+aiRight:Toggle("Show FOV Circle", false, function(v)
+	showFOV = v;
+	if not v then
+		fovCircle.Visible = false;
+	end
+end);
+aiRight:Slider("FOV Radius", 150, 10, 10, 500, "px", function(v)
+	aimbotFOV = v;
+	fovCircle.Radius = v;
+end);
+aiRight:Slider("Smoothing", 20, 1, 1, 100, "%", function(v)
+	aimbotSmooth = v / 100;
+end);
+aiRight:Dropdown("Target Bone", {"Head","HumanoidRootPart"}, {"Head","HumanoidRootPart"}, false, function(v)
+	aimbotBone = ((type(v) == "table") and v[1]) or v or "Head";
+end);
+dangerLeft:Toggle("Turret ESP", false, function(v)
+	turretEnabled = v;
+	if not v then
+		for i = 1, turretLastDrawn do
+			poolVis(turretLabelPool[i], false);
+			poolVis(turretDotPool[i], false);
+		end
+		turretLastDrawn = 0;
+		cachedTurrets = {};
+	end
+end);
+dangerLeft:Slider("Max Distance", 1000, 50, 50, 3000, "m", function(v)
+	turretMaxDist = v;
+end);
+dangerLeft:Divider("Corpses");
+dangerLeft:Toggle("Corpse ESP", false, function(v)
+	corpseEnabled = v;
+	if not v then
+		for i = 1, corpseLastDrawn do
+			poolVis(corpseLabelPool[i], false);
+			poolVis(corpseDotPool[i], false);
+		end
+		corpseLastDrawn = 0;
+		cachedCorpses = {};
+	end
+end);
+dangerLeft:Slider("Corpse Max Distance", 500, 50, 50, 2000, "m", function(v)
+	corpseMaxDist = v;
+end);
+local espItems = {};
+local function rebuildAI()
+	local char = LocalPlayer and LocalPlayer.Character;
+	local myHRP = char and char:FindFirstChild("HumanoidRootPart");
+	local myPos = myHRP and myHRP.Position;
+	local distSqMax = aiDistMax ^ 2;
+	local raw = {};
+	for _, e in ipairs(getCharacters()) do
+		local ok, rootPos = pcall(function()
+			return e.hrp.Position;
+		end);
+		if (ok and rootPos) then
+			local dx = (myPos and (myPos.X - rootPos.X)) or 0;
+			local dy = (myPos and (myPos.Y - rootPos.Y)) or 0;
+			local dz = (myPos and (myPos.Z - rootPos.Z)) or 0;
+			local distSq = (dx * dx) + (dy * dy) + (dz * dz);
+			if (distSq <= distSqMax) then
+				local d = math.sqrt(distSq);
+				local healthRatio, healthColor;
+				if (e.hp and e.maxhp and (e.maxhp > 0)) then
+					healthRatio = math.clamp(e.hp / e.maxhp, 0, 1);
+					healthColor = hpColor(healthRatio);
+				end
+				raw[#raw + 1] = {kind="ai",part=e.hrp,name=e.model.Name,distText=string.format("%dm", math.floor(d)),healthRatio=healthRatio,healthColor=healthColor,weapon=e.weapon,_distSq=distSq};
+			end
+		end
+	end
+	table.sort(raw, function(a, b)
+		return a._distSq < b._distSq;
+	end);
+	local out = {};
+	for _, v in ipairs(raw) do
+		if (#out >= MAX_SLOTS) then
+			break;
+		end
+		out[#out + 1] = v;
+	end
+	espItems = out;
+end
+local vpCX, vpCY = 0, 0;
+local function updateVP()
+	local vp = Camera.ViewportSize;
+	vpCX = vp.X * 0.5;
+	vpCY = vp.Y;
+end
+updateVP();
+local PHASE_LOOT = 0;
+local PHASE_WEAPON = 1;
+local PHASE_TURRET = 2;
+local PHASE_CORPSE = 3;
+local PHASE_SLIDER = 4;
+local framePhase = 0;
+local aiTimer = 0;
+local fogTimer = 0;
+local aiLastDrawn = 0;
+local vpTimer = 0;
+renderConn = RunService.RenderStepped:Connect(function(dt)
+	if not running then
+		return;
+	end
+	pcall(doAimbot);
+	pcall(updateFOVCircle);
+	fogTimer = fogTimer + dt;
+	if (fogTimer >= 0.1) then
+		fogTimer = 0;
+		if noFogEnabled then
+			applyNoFog();
+		elseif lastNoFog then
+			restoreFog();
+		end
+		lastNoFog = noFogEnabled;
+	end
+	if (noRecoilEnabled and recoilCache) then
+		applygc(recoilCache, recoilPayload);
+	end
+	aiTimer = aiTimer + dt;
+	if (aiTimer >= (1 / math.max(1, aiUpdateRate))) then
+		aiTimer = 0;
+		if aiEnabled then
+			pcall(rebuildAI);
+		end
+	end
+	vpTimer = vpTimer + dt;
+	if (vpTimer >= 0.5) then
+		vpTimer = 0;
+		updateVP();
+	end
+	local now = os.clock();
+	framePhase = (framePhase + 1) % 5;
+	if (framePhase == PHASE_LOOT) then
+		if ((now - lootStamp) >= LOOT_TTL) then
+			lootStamp = now;
+			if _G.ESP.Enabled then
+				pcall(rebuildLootCache);
+			end
+		end
+	elseif (framePhase == PHASE_WEAPON) then
+		if ((now - wpnStamp) >= LOOT_TTL) then
+			wpnStamp = now;
+			if _G.WEAPON_ESP.Enabled then
+				pcall(rebuildWeaponCache);
+			end
+		end
+	elseif (framePhase == PHASE_TURRET) then
+		if ((now - turretStamp) >= TURRET_TTL) then
+			turretStamp = now;
+			if turretEnabled then
+				pcall(rebuildTurretCache);
+			end
+		end
+	elseif (framePhase == PHASE_CORPSE) then
+		if ((now - corpseStamp) >= CORPSE_TTL) then
+			corpseStamp = now;
+			if corpseEnabled then
+				pcall(rebuildCorpseCache);
+			end
+		end
+	elseif (framePhase == PHASE_SLIDER) then
+		if ((now - sliderStamp) >= SLIDER_TTL) then
+			sliderStamp = now;
+			if sliderEnabled then
+				pcall(rebuildSliderCache);
+			end
+		end
+	end
+	local char = LocalPlayer.Character;
+	local hrp = char and char:FindFirstChild("HumanoidRootPart");
+	local myPos = hrp and hrp.Position;
+	if (_G.ESP.Enabled and myPos) then
+		local count = #cachedItems;
+		local slot = 0;
+		for i = 1, count do
+			local entry = cachedItems[i];
+			local root = entry.root;
+			if (root and root.Parent) then
+				local pos, onScreen = WorldToScreen(root.Position);
+				if onScreen then
+					slot = slot + 1;
+					local lbl = labelPool[slot];
+					local dot = dotPool[slot];
+					local rp = root.Position;
+					local dx, dy, dz = rp.X - myPos.X, rp.Y - myPos.Y, rp.Z - myPos.Z;
+					local dist = math.floor(math.sqrt((dx * dx) + (dy * dy) + (dz * dz)));
+					poolTxt(lbl, entry.name .. " [" .. dist .. "m]");
+					poolCol(lbl, entry.color);
+					poolPos(lbl, pos.X, pos.Y - 6);
+					poolVis(lbl, true);
+					poolCol(dot, entry.color);
+					poolPos(dot, pos.X, pos.Y + 8);
+					poolVis(dot, true);
+				end
+			end
+		end
+		for j = slot + 1, lootLastDrawn do
+			poolVis(labelPool[j], false);
+			poolVis(dotPool[j], false);
+		end
+		lootLastDrawn = slot;
+	else
+		for i = 1, lootLastDrawn do
+			poolVis(labelPool[i], false);
+			poolVis(dotPool[i], false);
+		end
+		lootLastDrawn = 0;
+	end
+	if (_G.WEAPON_ESP.Enabled and myPos) then
+		local wcount = #cachedWeapons;
+		local wslot = 0;
+		for i = 1, wcount do
+			local entry = cachedWeapons[i];
+			local root = entry.root;
+			if (root and root.Parent) then
+				local pos, onScreen = WorldToScreen(root.Position);
+				if onScreen then
+					wslot = wslot + 1;
+					local lbl = wpnLabelPool[wslot];
+					local dot = wpnDotPool[wslot];
+					local rp = root.Position;
+					local dx, dy, dz = rp.X - myPos.X, rp.Y - myPos.Y, rp.Z - myPos.Z;
+					local dist = math.floor(math.sqrt((dx * dx) + (dy * dy) + (dz * dz)));
+					poolTxt(lbl, entry.name .. " [" .. dist .. "m]");
+					poolCol(lbl, entry.color);
+					poolPos(lbl, pos.X, pos.Y - 6);
+					poolVis(lbl, true);
+					poolCol(dot, entry.color);
+					poolPos(dot, pos.X, pos.Y + 8);
+					poolVis(dot, true);
+				end
+			end
+		end
+		for j = wslot + 1, wpnLastDrawn do
+			poolVis(wpnLabelPool[j], false);
+			poolVis(wpnDotPool[j], false);
+		end
+		wpnLastDrawn = wslot;
+	else
+		for i = 1, wpnLastDrawn do
+			poolVis(wpnLabelPool[i], false);
+			poolVis(wpnDotPool[i], false);
+		end
+		wpnLastDrawn = 0;
+	end
+	if (turretEnabled and myPos) then
+		local count = #cachedTurrets;
+		local tslot = 0;
+		for i = 1, count do
+			local entry = cachedTurrets[i];
+			local anchor = entry.anchor;
+			if (anchor and anchor.Parent) then
+				local pos, onScreen = WorldToScreen(anchor.Position);
+				if onScreen then
+					tslot = tslot + 1;
+					local lbl = turretLabelPool[tslot];
+					local dot = turretDotPool[tslot];
+					local ap = anchor.Position;
+					local dx, dy, dz = ap.X - myPos.X, ap.Y - myPos.Y, ap.Z - myPos.Z;
+					local dist = math.floor(math.sqrt((dx * dx) + (dy * dy) + (dz * dz)));
+					poolTxt(lbl, "[TURRET] " .. entry.name .. " [" .. dist .. "m]");
+					poolPos(lbl, pos.X, pos.Y - 8);
+					poolVis(lbl, true);
+					poolPos(dot, pos.X, pos.Y + 8);
+					poolVis(dot, true);
+				end
+			end
+		end
+		for j = tslot + 1, turretLastDrawn do
+			poolVis(turretLabelPool[j], false);
+			poolVis(turretDotPool[j], false);
+		end
+		turretLastDrawn = tslot;
+	else
+		for i = 1, turretLastDrawn do
+			poolVis(turretLabelPool[i], false);
+			poolVis(turretDotPool[i], false);
+		end
+		turretLastDrawn = 0;
+	end
+	if (corpseEnabled and myPos) then
+		local count = #cachedCorpses;
+		local cslot = 0;
+		for i = 1, count do
+			local entry = cachedCorpses[i];
+			local anchor = entry.anchor;
+			if (anchor and anchor.Parent) then
+				local pos, onScreen = WorldToScreen(anchor.Position);
+				if onScreen then
+					cslot = cslot + 1;
+					local lbl = corpseLabelPool[cslot];
+					local dot = corpseDotPool[cslot];
+					local ap = anchor.Position;
+					local dx, dy, dz = ap.X - myPos.X, ap.Y - myPos.Y, ap.Z - myPos.Z;
+					local dist = math.floor(math.sqrt((dx * dx) + (dy * dy) + (dz * dz)));
+					poolTxt(lbl, "[CORPSE] " .. entry.name .. " [" .. dist .. "m]");
+					poolPos(lbl, pos.X, pos.Y - 8);
+					poolVis(lbl, true);
+					poolPos(dot, pos.X, pos.Y + 8);
+					poolVis(dot, true);
+				end
+			end
+		end
+		for j = cslot + 1, corpseLastDrawn do
+			poolVis(corpseLabelPool[j], false);
+			poolVis(corpseDotPool[j], false);
+		end
+		corpseLastDrawn = cslot;
+	else
+		for i = 1, corpseLastDrawn do
+			poolVis(corpseLabelPool[i], false);
+			poolVis(corpseDotPool[i], false);
+		end
+		corpseLastDrawn = 0;
+	end
+	if (sliderEnabled and myPos) then
+		local count = #cachedSliders;
+		local sslot = 0;
+		for i = 1, count do
+			local entry = cachedSliders[i];
+			local anchor = entry.anchor;
+			if (anchor and anchor.Parent) then
+				local pos, onScreen = WorldToScreen(anchor.Position);
+				if onScreen then
+					sslot = sslot + 1;
+					local lbl = sliderLabelPool[sslot];
+					local dot = sliderDotPool[sslot];
+					local ap = anchor.Position;
+					local dx, dy, dz = ap.X - myPos.X, ap.Y - myPos.Y, ap.Z - myPos.Z;
+					local dist = math.floor(math.sqrt((dx * dx) + (dy * dy) + (dz * dz)));
+					poolTxt(lbl, entry.name .. " [" .. dist .. "m]");
+					poolCol(lbl, entry.color);
+					poolPos(lbl, pos.X, pos.Y - 8);
+					poolVis(lbl, true);
+					poolCol(dot, entry.color);
+					poolPos(dot, pos.X, pos.Y + 8);
+					poolVis(dot, true);
+				end
+			end
+		end
+		for j = sslot + 1, sliderLastDrawn do
+			poolVis(sliderLabelPool[j], false);
+			poolVis(sliderDotPool[j], false);
+		end
+		sliderLastDrawn = sslot;
+	else
+		for i = 1, sliderLastDrawn do
+			poolVis(sliderLabelPool[i], false);
+			poolVis(sliderDotPool[i], false);
+		end
+		sliderLastDrawn = 0;
+	end
+	if not aiEnabled then
+		for i = 1, aiLastDrawn do
+			hideSlot(slots[i]);
+		end
+		aiLastDrawn = 0;
+		return;
+	end
+	local slot = 0;
+	for _, it in ipairs(espItems) do
+		if (slot >= MAX_SLOTS) then
+			break;
+		end
+		local ok, topPos, topOn, botPos, botOn = pcall(function()
+			local rp = it.part.Position;
+			local tp, ton = WorldToScreen(rp + HEAD_OFF);
+			local bp, bon;
+			if ton then
+				bp, bon = WorldToScreen(rp - FOOT_OFF);
+			end
+			return tp, ton, bp, bon;
+		end);
+		if (ok and topOn) then
+			slot = slot + 1;
+			local s = slots[slot];
+			local hx = topPos.X;
+			local rowY = (topPos.Y - TEXT_SIZE) - 2;
+			if (snap.box and botOn) then
+				local h = math.max(math.abs(botPos.Y - topPos.Y), 1);
+				local w = h * 0.5;
+				drawBox(s, hx - (w * 0.5), topPos.Y, w, h, BOX_COL_DEF);
+			else
+				for i = 1, 4 do
+					wVis(s.box[i], false);
+				end
+			end
+			if (snap.health and it.healthRatio and botOn) then
+				local charH = math.max(math.abs(botPos.Y - topPos.Y), 10);
+				local charW = charH * 0.5;
+				local barX = (hx - (charW * 0.5)) - 5;
+				local fillH = math.max(charH * it.healthRatio, 1);
+				wSeg(s.hpBg, barX, topPos.Y, barX, topPos.Y + charH);
+				wCol(s.hpBg, HP_BG_COL);
+				wVis(s.hpBg, true);
+				wSeg(s.hpFg, barX, topPos.Y + charH, barX, (topPos.Y + charH) - fillH);
+				wCol(s.hpFg, it.healthColor or HP_COL);
+				wVis(s.hpFg, true);
+			else
+				wVis(s.hpBg, false);
+				wVis(s.hpFg, false);
+			end
+			local nmTxt = (snap.name and it.name) or nil;
+			local dsTxt = (snap.dist and it.distText) or nil;
+			local nmW = (nmTxt and textW(nmTxt)) or 0;
+			local dsW = (dsTxt and textW(dsTxt)) or 0;
+			local total, cnt = 0, 0;
+			if nmTxt then
+				total = total + nmW;
+				cnt = cnt + 1;
+			end
+			if dsTxt then
+				total = total + dsW;
+				cnt = cnt + 1;
+			end
+			if (cnt > 1) then
+				total = total + (GAP * (cnt - 1));
+			end
+			local x = hx - (total * 0.5);
+			if nmTxt then
+				drawText(s.name, x + (nmW * 0.5), rowY, nmTxt, NAME_COL);
+				x = x + nmW + GAP;
+			else
+				wVis(s.name, false);
+			end
+			if dsTxt then
+				drawText(s.dist, x + (dsW * 0.5), rowY, dsTxt, DIST_COL);
+			else
+				wVis(s.dist, false);
+			end
+			if (snap.weapon and it.weapon and botOn) then
+				drawText(s.wpn, hx, botPos.Y + 2, it.weapon, WPN_COL);
+			else
+				wVis(s.wpn, false);
+			end
+			wVis(s.dot, false);
+			if snap.tracer then
+				wSeg(s.tracer, vpCX, vpCY, hx, topPos.Y);
+				wCol(s.tracer, TRACER_COL);
+				wVis(s.tracer, true);
+			else
+				wVis(s.tracer, false);
+			end
+		end
+	end
+	for i = slot + 1, aiLastDrawn do
+		hideSlot(slots[i]);
+	end
+	aiLastDrawn = slot;
+end);
+Lib:Notify("Seim Havoc V2", "Loaded successfully!", 4, "success");
+print("[Seim Havoc V2] loaded.");
